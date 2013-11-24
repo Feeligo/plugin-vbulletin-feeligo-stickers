@@ -3,9 +3,9 @@
 <product productid="feeligo_stickers" active="1">
 	<title>Feeligo Stickers</title>
 	<description>Lets your users include beautiful Stickers in their posts</description>
-	<version>1.2.1</version>
-	<url>http://www.feeligo.com/stickers/forums/vbulletin</url>
-	<versioncheckurl>http://www.feeligo.com/stickers/forums/vbulletin/latest.xml</versioncheckurl>
+	<version>1.2.2</version>
+	<url>http://stickers.feeligo.com/forums/vbulletin</url>
+	<versioncheckurl>http://stickers.feeligo.com/forums/vbulletin/latest.xml</versioncheckurl>
 	<dependencies>
 	</dependencies>
 	<codes>
@@ -38,46 +38,38 @@ function flg_wrapper_php() {
 $vbulletin->templatecache['editor_smiliebox'] .= flg_wrapper_php();]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="1">
-			<title><![CDATA[Add Javascript to <head>]]></title>
+			<title><![CDATA[Add Javascript loader to <head>]]></title>
 			<hookname>parse_templates</hookname>
-			<phpcode><![CDATA[$viewer_json = json_encode(array(
-  'id' => $vbulletin->userinfo['userid'],
-  'name' => $vbulletin->userinfo['musername'],
-));
-$platform_json = json_encode(array(
-  'name' => 'vbulletin',
-  'version' => $vbulletin->options['templateversion'],
-));
+			<phpcode><![CDATA[// add the app loader to the template of forum pages
+if (isset($vbulletin->GPC['forumid']) && $vbulletin->GPC['forumid']) {
+  $flg_host = defined('FLG_HOST')
+    ? FLG_HOST
+    : 'stickersapp.feeligo.com';
+  $vb_version = isset($vbulletin->options['templateversion'])
+    ? $vbulletin->options['templateversion']
+    : '';
+  $user_id = isset($vbulletin->userinfo['userid'])
+    ? $vbulletin->userinfo['userid']
+    : '';
 
-// on all pages, initialize JS variables
-$js = implode(array(
-'<script id="flg_init">',
-'(function(f){',
-// context
-'(function(c){',
-// context.viewer
-'c.viewer='.$viewer_json.';',
-// context.platform
-'c.platform='.$platform_json.';',
-'})(f.context||(f.context={}));',
-'})(window.flg||(window.flg={}));',
-'</script>',
-));
+  // asynchronous JS loader
+  $js = <<<FLGJS
+(function(f,ee,l,i,g,o){f[l]=f[l]||{};o&&(o+='').length?(f[l].context={viewer:
+{id:o},platform:{name:i,version:g}})&&(o='-'+o):(o='');(function(s,t,k,r){
+t=ee.createElement(r='script');k=ee.getElementsByTagName(r)[0];t.async=1;t.src=s;
+k.parentNode.insertBefore(t,k);})('http://$flg_host/'+
+ee.location.hostname+'/loader'+o+'.js')})
+(window,document,'flg','vbulletin','$vb_version','$user_id');
+FLGJS;
+  $js = '<script>' . $js . '</script>';
 
-// load the app, only on forum pages
-if ($vbulletin->GPC['forumid']) {
-  $flg_host = defined('FLG_HOST') ? FLG_HOST : 'stickersapi.feeligo.com';
-  $vb_host = ($h = $_SERVER['HTTP_HOST']) ? array_shift(explode(':', $h)) : '';
-  $loader_js_url = "http://$flg_host/$vb_host/loader.js";
-  // the <script> tag that loads the app loader JS
-  $js .= '<script src="'.$loader_js_url.'"></script>';
-}
-
-// insert JS code into <head>
-if (!isset($template_hook['headinclude_javascript']) || $template_hook['headinclude_javascript'] === NULL) {
-  $template_hook['headinclude_javascript'] = '';
-}
-$template_hook['headinclude_javascript'] .= $js;]]></phpcode>
+  // add <script> tag to <head>
+  if (!isset($template_hook['headinclude_javascript']) ||
+      $template_hook['headinclude_javascript'] === NULL) {
+    $template_hook['headinclude_javascript'] = '';
+  }
+  $template_hook['headinclude_javascript'] .= $js;
+}]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="5">
 			<title><![CDATA[Add CSS to <head> (customize to match your layout)]]></title>
