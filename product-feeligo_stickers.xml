@@ -3,7 +3,7 @@
 <product productid="feeligo_stickers" active="1">
 	<title>Feeligo Stickers</title>
 	<description>Lets your users include beautiful Stickers in their posts</description>
-	<version>1.2.2</version>
+	<version>1.2.3</version>
 	<url>http://stickers.feeligo.com/forums/vbulletin</url>
 	<versioncheckurl>http://stickers.feeligo.com/forums/vbulletin/latest.xml</versioncheckurl>
 	<dependencies>
@@ -48,7 +48,7 @@ if (isset($vbulletin->GPC['forumid']) && $vbulletin->GPC['forumid']) {
   $vb_version = isset($vbulletin->options['templateversion'])
     ? $vbulletin->options['templateversion']
     : '';
-  $user_id = isset($vbulletin->userinfo['userid'])
+  $user_id = isset($vbulletin->userinfo['userid']) && $vbulletin->userinfo['userid'] > 0
     ? $vbulletin->userinfo['userid']
     : '';
 
