@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<product productid="feeligo_stickers" active="1">
+  <title>Feeligo Stickers</title>
+  <description>Lets your users include beautiful Stickers in their posts</description>
+  <version>1.2.5</version>
+  <url>http://stickers.feeligo.com/forums/vbulletin?s=admincp</url>
+  <versioncheckurl>http://stickers.feeligo.com/forums/vbulletin/latest.xml</versioncheckurl>
+  <dependencies>
+  </dependencies>
+  <codes>
+  </codes>
+  <templates>
+  </templates>
+  <stylevardfns>
+  </stylevardfns>
+  <stylevars>
+  </stylevars>
+  <plugins>
+    <plugin active="1" executionorder="5">
+      <title>Wrap Smiliebox</title>
+      <hookname>parse_templates</hookname>
+      <phpcode>
+        <![CDATA[// generates the HTML code which wraps the smiliebox
+// modifies the `editor_smiliebox` template
+$vbulletin->templatecache['editor_smiliebox'] = "<div id='fstk_container'>".$vbulletin->templatecache['editor_smiliebox']."</div>";
+]]>
+      </phpcode>
+    </plugin>
+    <plugin active="1" executionorder="5">
+      <title><![CDATA[Add CSS to <head> (customize to match your layout)]]></title>
+      <hookname>parse_templates</hookname>
+      <phpcode><![CDATA[// Custom CSS to allow more room for the Stickers
+// box in place of the default smiliebox.
+// You might need to customize this to match your site
+// layout.
+
+$css = <<<CSS
+#vB_Editor_001_smiliebox {
+  width: 150px;
+}
+CSS;
+
+// insert CSS code into <head>
+$css = '<style type=\"text/css\">'.$css.'</style>';
+$find = "<!-- CSS Stylesheet -->";
+$vbulletin->templatecache['headinclude'] = str_replace($find, $find.$css,  $vbulletin->templatecache['headinclude']);]]></phpcode>
+    </plugin>
+    <plugin active="1" executionorder="1">
+      <title><![CDATA[Add Javascript loader to <head>]]></title>
+      <hookname>parse_templates</hookname>
+      <phpcode><![CDATA[// add the app loader to the template of forum pages
+if (isset($vbulletin->GPC['forumid']) && $vbulletin->GPC['forumid']) {
+  $flg_host = defined('FLG_HOST')
+    ? FLG_HOST
+    : 'stickersapp.feeligo.com';
+  $vb_version = isset($vbulletin->options['templateversion'])
+    ? $vbulletin->options['templateversion']
+    : '';
+  $user_id = isset($vbulletin->userinfo['userid']) && $vbulletin->userinfo['userid'] > 0
+    ? $vbulletin->userinfo['userid']
+    : '';
+
+  // asynchronous JS loader
+  $js = <<<FLGJS
+(function(f,ee,l,i,g,o){f[l]=f[l]||{};o&&(o+='').length?(f[l].context={viewer:
+{id:o},platform:{name:i,version:g}})&&(o='-'+o):(o='');(function(s,t,k,r){
+t=ee.createElement(r='script');k=ee.getElementsByTagName(r)[0];t.async=1;t.src=s;
+k.parentNode.insertBefore(t,k);})('http://$flg_host/'+
+ee.location.hostname+'/loader'+o+'.js')})
+(window,document,'flg','vbulletin','$vb_version','$user_id');
+FLGJS;
+  $js = '<script type=\"text/javascript\">' . $js . '</script>';
+  $find = "<!-- CSS Stylesheet -->";
+  $vbulletin->templatecache['headinclude'] = str_replace($find, $find.$js,  $vbulletin->templatecache['headinclude']);
+}]]></phpcode>
+    </plugin>
+  </plugins>
+  <phrases>
+  </phrases>
+  <options>
+  </options>
+  <helptopics>
+  </helptopics>
+  <cronentries>
+  </cronentries>
+  <faqentries>
+  </faqentries>
+  <navigation>
+  </navigation>
+</product>
