@@ -3,7 +3,7 @@
 <product productid="feeligo_stickers" active="1">
 	<title>Feeligo Stickers</title>
 	<description>Lets your users include beautiful Stickers in their posts</description>
-	<version>1.2.4</version>
+	<version>1.2.5</version>
 	<url>http://stickers.feeligo.com/forums/vbulletin?s=admincp</url>
 	<versioncheckurl>http://stickers.feeligo.com/forums/vbulletin/latest.xml</versioncheckurl>
 	<dependencies>
@@ -36,30 +36,6 @@ function flg_wrapper_php() {
 
 // modifies the `editor_smiliebox` template
 $vbulletin->templatecache['editor_smiliebox'] .= flg_wrapper_php();]]></phpcode>
-		</plugin>
-		<plugin active="1" executionorder="5">
-			<title><![CDATA[Add CSS to <head> (customize to match your layout)]]></title>
-			<hookname>parse_templates</hookname>
-			<phpcode><![CDATA[// Custom CSS to allow more room for the Stickers
-// box in place of the default smiliebox.
-// You might need to customize this to match your site
-// layout.
-
-$css = <<<CSS
-.editor_textbox_smilie {
-margin-right: 160px;
-}
-.editor_smiliebox {
-width: 150px;
-}
-CSS;
-
-// insert CSS code into <head>
-$css = "<style type=\"text/css\">\n".$css."\n</style>";
-if (!isset($template_hook['headinclude_css']) || $template_hook['headinclude_css'] === NULL) {
-  $template_hook['headinclude_css'] = '';
-}
-$template_hook['headinclude_css'] .= $css;]]></phpcode>
 		</plugin>
 		<plugin active="1" executionorder="1">
 			<title><![CDATA[Add Javascript loader to <head>]]></title>

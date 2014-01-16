@@ -27,25 +27,6 @@ $vbulletin->templatecache['editor_smiliebox'] = "<div id='fstk_container'>".$vbu
 ]]>
       </phpcode>
     </plugin>
-    <plugin active="1" executionorder="5">
-      <title><![CDATA[Add CSS to <head> (customize to match your layout)]]></title>
-      <hookname>parse_templates</hookname>
-      <phpcode><![CDATA[// Custom CSS to allow more room for the Stickers
-// box in place of the default smiliebox.
-// You might need to customize this to match your site
-// layout.
-
-$css = <<<CSS
-#vB_Editor_001_smiliebox {
-  width: 150px;
-}
-CSS;
-
-// insert CSS code into <head>
-$css = '<style type=\"text/css\">'.$css.'</style>';
-$find = "<!-- CSS Stylesheet -->";
-$vbulletin->templatecache['headinclude'] = str_replace($find, $find.$css,  $vbulletin->templatecache['headinclude']);]]></phpcode>
-    </plugin>
     <plugin active="1" executionorder="1">
       <title><![CDATA[Add Javascript loader to <head>]]></title>
       <hookname>parse_templates</hookname>
@@ -71,8 +52,7 @@ ee.location.hostname+'/loader'+o+'.js')})
 (window,document,'flg','vbulletin','$vb_version','$user_id');
 FLGJS;
   $js = '<script type=\"text/javascript\">' . $js . '</script>';
-  $find = "<!-- CSS Stylesheet -->";
-  $vbulletin->templatecache['headinclude'] = str_replace($find, $find.$js,  $vbulletin->templatecache['headinclude']);
+  $vbulletin->templatecache['header'] .= $js;
 }]]></phpcode>
     </plugin>
   </plugins>
