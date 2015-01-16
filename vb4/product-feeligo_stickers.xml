@@ -58,8 +58,9 @@ if (isset($vbulletin->GPC['forumid']) && $vbulletin->GPC['forumid']) {
 {id:o},platform:{name:i,version:g}})&&(o='-'+o):(o='');(function(s,t,k,r){
 t=ee.createElement(r='script');k=ee.getElementsByTagName(r)[0];t.async=1;t.src=s;
 k.parentNode.insertBefore(t,k);})('http://$flg_host/'+
-ee.location.hostname+'/loader'+o+'.js')})
-(window,document,'flg','vbulletin','$vb_version','$user_id');
+ee.location.hostname+'/loader'+o+'.js');
+f[l].q=[];f[l].on=function(s,t){f[l].q.push([s,t])}
+})(window,document,'flg','vbulletin','$vb_version','$user_id');
 FLGJS;
   $js = '<script>' . $js . '</script>';
 
